@@ -39,12 +39,7 @@ simulate <- function(formula,from,to) {
     prediction <- eval(parse(text = formula))
     data <<- data_sample[i,]
     
-   # from_year <- data_sample[i + to]
-   # from_week <- data_sample[i + to]
-   # to_year <- data_sample[i + to]
-  #  to_week <- data_sample[i + to]
-    
-    
+    # add time information 
     
     string <<- "sales <- data$sales"  
     
