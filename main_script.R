@@ -1,5 +1,14 @@
 
 
+#################################################################################################
+## structure of this file #######################################################################
+#################################################################################################
+# main components:
+# 1. load data
+# 2. define function for iterating
+# 3. define forecasting model by formula
+
+
 
 library(plyr)
 library(lubridate)
@@ -8,8 +17,9 @@ library(stringr)
 
 
 
+
 #################################################################################################
-## 1. load and prepare data and result table ####################################################
+## 1. load data #################################################################################
 #################################################################################################
 
 # set your working directory!
@@ -28,8 +38,17 @@ data_sample$weeknumber <- str_pad(data_sample$weeknumber, 2, pad = "0")
 
 
 
+
+
+#################################################################################################
+## 2. define function for iterating #############################################################
+#################################################################################################
+
+
 simulate <- function(formula,f,t) {
       
+      # create new columns which are needed for prediction
+  
       data_sampledt <<- as.data.table(data_sample)
       
       data_sampledt[,predict_year:= yearofweeknumber.x]
@@ -49,6 +68,8 @@ simulate <- function(formula,f,t) {
       exec <-paste("data_sampledt[,to_weeknumber:= shift(weeknumber,",t,"), by = itemno]")
       eval(parse(text = exec))
       
+      # cummulate sales for the timespan predicted (dynamic)
+      
       string <- ""
       
       for(e in f:t){
@@ -66,6 +87,8 @@ simulate <- function(formula,f,t) {
       
       exec <- gsub(" ","",paste("set(data_sampledt, as.integer(i),",ncol(data_sampledt),"L,prediction)"))
       
+      # loop through all rows as fast as possible ;)
+      
       for (i in 1:nrow(data_sampledt)) {
         
           data <- data_sampledt[i,]
@@ -77,6 +100,13 @@ simulate <- function(formula,f,t) {
         
 }
 
+
+
+
+
+#################################################################################################
+## 3. define forecasting model by formula #######################################################
+#################################################################################################
 
   simulate('
            ((data$csales_hist_sales_1 * 0.1) 
