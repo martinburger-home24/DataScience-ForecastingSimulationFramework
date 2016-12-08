@@ -1,5 +1,6 @@
 
 
+
 #################################################################################################
 ## structure of this file #######################################################################
 #################################################################################################
@@ -109,7 +110,7 @@ simulate <- function(formula,f,t) {
 #################################################################################################
 
   simulate('
-           ((data$csales_hist_sales_1 * 0.1) 
+           (((data$csales_hist_sales_1 * 0.1) 
            + (data$csales_hist_sales_2 * 0.1) 
            + (data$csales_hist_sales_3 * 0.1) 
            + (data$csales_hist_sales_4 * 0.1) 
@@ -120,8 +121,18 @@ simulate <- function(formula,f,t) {
            + (data$csales_hist_sales_9 * 0.05)
            + (data$csales_hist_sales_10 * 0.05)
            + (data$csales_hist_sales_11 * 0.05)
-           + (data$csales_hist_sales_12 * 0.05)) * 10',
+           + (data$csales_hist_sales_12 * 0.05)) * 10
+           )',
            0,9)
 
 
-  write.table(data_sampledt, "test_result.txt")
+  write.table(data_sampledt, "result_10_trend.txt")
+  
+  
+  
+  
+  (if
+  ((data$csales_hist_sales_1 > data_sampledt$quant_last8) &
+   (data$csales_hist_sales_2 > data_sampledt$quant_last8) &
+   (data$csales_hist_sales_3 > data_sampledt$quant_last8))
+  {2} else {1})
